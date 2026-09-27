@@ -31,7 +31,7 @@ import multiprocessing_match
 app = Flask(__name__)
 app.secret_key = "skillswap-prototype-secret-key"  # fine for a college prototype
 
-socketio = SocketIO(app, cors_allowed_origins="*")
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode="threading")
 
 # Make sure tables exist before the first request is handled.
 database.init_db()
