@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Matches - SkillSwap{% endblock %}
+{% block content %}
+<section class="dashboard">
+    {% if skill_request %}
+        <h2>Matches for "{{ skill_request.skill_name }}"</h2>
+        <p class="muted">Ranked using filter() &rarr; filter() &rarr; map() &rarr; sorted() over all approved skill offers.</p>
+
+        {% if ranked %}
+            <div class="match-cards">
+                {% for m in ranked %}
+                <div class="match-card">
+                    <h4>{{ m.owner.name }}</h4>
+                    <p>{{ m.offer.skill_name }} &middot; {{ m.owner.location }}</p>
+                    <p>Availability: {{ m.offer.available_days or "Flexible" }}</p>
+                    <p class="compat">Compatibility: {{ m.score.total }}%</p>
+                    <p class="score-breakdown">
+                        Skill {{ m.score.skill_score }}/40 &middot;
+                        Availability {{ m.score.availability_score }}/25 &middot;
+                        Mode {{ m.score.mode_score }}/15 &middot;
+                        Location {{ m.score.location_score }}/10 &middot;
+                        Rating {{ m.score.rating_score }}/10
+                    </p>
+                    <p>Estimated cost: <strong>{{ m.offer.points }} points</strong></p>
+                    <div class="match-actions">
+                        <a href="{{ url_for('profile') }}" class="btn btn-outline small">View Profile</a>
+                        <form method="POST" action="{{ url_for('create_exchange_request', offer_id=m.offer.offer_id) }}">
+                            <button type="submit" class="btn btn-primary small">Request Exchange</button>
+                        </form>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-state">No compatible skill offers found yet. Check back later!</p>
+        {% endif %}
+
+    {% elif parallel_results %}
+        <h2>Parallel Matching Demo (Multiprocessing)</h2>
+        <p class="muted">Every open skill request below was matched in its own worker process, in parallel.</p>
+
+        {% for request_id, info in parallel_results.items() %}
+        <div class="dash-panel">
+            <h3>Request #{{ request_id }} &mdash; {{ info.skill_name }}</h3>
+            {% if info.matches %}
+                <table class="data-table">
+                    <tr><th>Teacher</th><th>Skill</th><th>Points</th><th>Score</th></tr>
+                    {% for m in info.matches %}
+                    <tr>
+                        <td>{{ m.owner_name }}</td>
+                        <td>{{ m.skill_name }}</td>
+                        <td>{{ m.points }}</td>
+                        <td>{{ m.total_score }}%</td>
+                    </tr>
+                    {% endfor %}
+                </table>
+            {% else %}
+                <p class="empty-state">No matches for this request.</p>
+            {% endif %}
+        </div>
+        {% endfor %}
+        {% if not parallel_results %}
+            <p class="empty-state">No open skill requests to match right now.</p>
+        {% endif %}
+    {% endif %}
+</section>
+{% endblock %}

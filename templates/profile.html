@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block title %}Profile - SkillSwap{% endblock %}
+{% block content %}
+<section class="profile-page">
+    <div class="profile-card">
+        <h2>{{ user.name }}</h2>
+        <p class="muted">{{ user.email }}</p>
+
+        <div class="profile-stats">
+            <div><strong>{{ user.location }}</strong><span>Location</span></div>
+            <div><strong>{{ "%.1f"|format(user.rating) }} ★</strong><span>Rating ({{ user.rating_count }})</span></div>
+            <div><strong>{{ user.points }}</strong><span>Exchange Points</span></div>
+        </div>
+
+        <h3>Skills Offered</h3>
+        {% if my_offers %}
+            <ul class="simple-list">
+                {% for o in my_offers %}
+                    <li>{{ o.skill_name }} ({{ o.difficulty }}, {{ o.duration }}h, {{ o.points }} pts) - {{ o.approval_status }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-state">No skills offered yet.</p>
+        {% endif %}
+
+        <h3>Skills Wanted</h3>
+        {% if my_requests %}
+            <ul class="simple-list">
+                {% for r in my_requests %}
+                    <li>{{ r.skill_name }} ({{ r.mode }}) - {{ r.status }}</li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p class="empty-state">No skills requested yet.</p>
+        {% endif %}
+
+        <h3>Edit Profile</h3>
+        <form method="POST" action="{{ url_for('profile') }}">
+            <label>Name</label>
+            <input type="text" name="name" value="{{ user.name }}" required>
+            <label>Location</label>
+            <input type="text" name="location" value="{{ user.location }}" required>
+            <button type="submit" class="btn btn-primary">Save Changes</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

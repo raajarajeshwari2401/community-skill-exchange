@@ -1,0 +1,118 @@
+{% extends "base.html" %}
+
+{% block title %}Explore Skills - SkillSwap{% endblock %}
+
+{% block content %}
+
+<div class="container">
+
+    <div class="page-header">
+        <h1>Explore Skills</h1>
+        <p>Discover skills offered by people in the SkillSwap community.</p>
+    </div>
+
+    <div class="explore-search">
+        <input
+            type="text"
+            id="skillSearch"
+            placeholder="Search for a skill..."
+            onkeyup="searchSkills()"
+        >
+    </div>
+
+    <div class="skills-grid" id="skillsGrid">
+
+        {% if offers %}
+
+            {% for offer in offers %}
+
+            <div class="skill-card">
+
+                <h2>{{ offer["skill_name"] }}</h2>
+
+                <p class="category">
+                    {{ offer["category"] }}
+                </p>
+
+                <p>
+                    <strong>Difficulty:</strong>
+                    {{ offer["difficulty"] }}
+                </p>
+
+                <p>
+                    <strong>Duration:</strong>
+                    {{ offer["duration"] }} hours
+                </p>
+
+                <p>
+                    <strong>Mode:</strong>
+                    {{ offer["mode"] }}
+                </p>
+
+                <p>
+                    <strong>Exchange Points:</strong>
+                    {{ offer["points"] }} pts
+                </p>
+
+                <form method="POST"
+                      action="{{ url_for('create_exchange_request', offer_id=offer['offer_id']) }}">
+
+                    <button type="submit" class="btn-primary">
+                        Request Skill
+                    </button>
+
+                </form>
+
+            </div>
+
+            {% endfor %}
+
+        {% else %}
+
+            <div class="empty-state">
+                <h2>No skills available yet</h2>
+
+                <p>
+                    Be the first person to offer a skill to the community!
+                </p>
+
+                <a href="{{ url_for('offer_skill') }}" class="btn-primary">
+                    + Offer a Skill
+                </a>
+            </div>
+
+        {% endif %}
+
+    </div>
+
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+
+<script>
+function searchSkills() {
+
+    const search =
+        document.getElementById("skillSearch").value.toLowerCase();
+
+    const cards =
+        document.querySelectorAll(".skill-card");
+
+    cards.forEach(function(card) {
+
+        const text = card.innerText.toLowerCase();
+
+        if (text.includes(search)) {
+            card.style.display = "block";
+        } else {
+            card.style.display = "none";
+        }
+
+    });
+
+}
+</script>
+
+{% endblock %}

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}SkillSwap - Share Skills, Earn Points{% endblock %}
+{% block content %}
+
+<section class="hero">
+    <h1>Share your skills. Learn from others.</h1>
+    <p class="subtitle">Exchange skills using a fair point-based system.</p>
+    <div class="hero-buttons">
+        <a href="{{ url_for('request_skill') if user else url_for('login') }}" class="btn btn-primary">Find a Skill</a>
+        <a href="{{ url_for('offer_skill') if user else url_for('login') }}" class="btn btn-secondary">Offer a Skill</a>
+    </div>
+</section>
+
+<section class="how-it-works" id="how-it-works">
+    <h2>How It Works</h2>
+    <div class="cards-row">
+        <div class="card step-card">
+            <div class="step-number">1</div>
+            <h3>Offer a Skill</h3>
+            <p>Tell the community what you can teach and how difficult it is.</p>
+        </div>
+        <div class="card step-card">
+            <div class="step-number">2</div>
+            <h3>Earn Exchange Points</h3>
+            <p>Points are calculated automatically: Duration &times; Difficulty Factor.</p>
+        </div>
+        <div class="card step-card">
+            <div class="step-number">3</div>
+            <h3>Find Someone to Learn From</h3>
+            <p>Our matching engine ranks the most compatible teachers for you.</p>
+        </div>
+        <div class="card step-card">
+            <div class="step-number">4</div>
+            <h3>Exchange &amp; Rate</h3>
+            <p>Complete the exchange, spend/earn points, and rate each other.</p>
+        </div>
+    </div>
+</section>
+
+<section class="why-section">
+    <h2>Why SkillSwap</h2>
+    <div class="cards-row">
+        <div class="card why-card">Fair point-based exchange</div>
+        <div class="card why-card">Online / Offline options</div>
+        <div class="card why-card">Smart matching</div>
+        <div class="card why-card">Community ratings</div>
+    </div>
+</section>
+
+{% endblock %}

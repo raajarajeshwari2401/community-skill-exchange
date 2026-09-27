@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Register - SkillSwap{% endblock %}
+{% block content %}
+<section class="form-page">
+    <div class="form-card">
+        <h2>Create your account</h2>
+        <form method="POST" action="{{ url_for('register') }}">
+            <label>Name</label>
+            <input type="text" name="name" required placeholder="e.g. Rahul Sharma">
+
+            <label>Email</label>
+            <input type="email" name="email" required placeholder="you@example.com">
+
+            <label>Password</label>
+            <input type="password" name="password" required minlength="4">
+
+            <label>Location</label>
+            <input type="text" name="location" required placeholder="e.g. Salem, Tamil Nadu">
+
+            <button type="submit" class="btn btn-primary full-width">Register</button>
+        </form>
+        <p class="form-footer">Already have an account? <a href="{{ url_for('login') }}">Login</a></p>
+    </div>
+</section>
+{% endblock %}

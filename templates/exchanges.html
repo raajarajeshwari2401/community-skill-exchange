@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}My Exchanges - SkillSwap{% endblock %}
+{% block content %}
+<section class="dashboard">
+    <h2>My Exchanges</h2>
+
+    {% if enriched %}
+    <table class="data-table wide-table">
+        <tr>
+            <th>Skill</th><th>Requester</th><th>Provider</th><th>Points</th><th>Status</th><th>Actions</th>
+        </tr>
+        {% for item in enriched %}
+        {% set e = item.exchange %}
+        <tr>
+            <td>{{ e.skill }}</td>
+            <td>{{ item.requester.name }}</td>
+            <td>{{ item.provider.name }}</td>
+            <td>{{ e.points }}</td>
+            <td><span class="badge badge-{{ e.status|lower }}">{{ e.status }}</span></td>
+            <td>
+                {% if e.status == "Pending" and item.is_provider %}
+                    <form method="POST" action="{{ url_for('accept_exchange', exchange_id=e.exchange_id) }}" style="display:inline">
+                        <button class="btn btn-primary small" type="submit">Accept</button>
+                    </form>
+                    <form method="POST" action="{{ url_for('reject_exchange', exchange_id=e.exchange_id) }}" style="display:inline">
+                        <button class="btn btn-outline small" type="submit">Reject</button>
+                    </form>
+                {% elif e.status == "Accepted" %}
+                    <form method="POST" action="{{ url_for('complete_exchange', exchange_id=e.exchange_id) }}" style="display:inline">
+                        <button class="btn btn-primary small" type="submit">Mark Completed</button>
+                    </form>
+                {% elif e.status == "Completed" and not item.already_rated %}
+                    <button class="btn btn-outline small" type="button" onclick="document.getElementById('rate-form-{{ e.exchange_id }}').classList.toggle('hidden')">Rate</button>
+                    <form id="rate-form-{{ e.exchange_id }}" method="POST" action="{{ url_for('rate_exchange', exchange_id=e.exchange_id) }}" class="rate-form hidden">
+                        <select name="rating">
+                            {% for i in [5,4,3,2,1] %}
+                            <option value="{{ i }}">{{ i }} star{{ 's' if i != 1 else '' }}</option>
+                            {% endfor %}
+                        </select>
+                        <input type="text" name="feedback" placeholder="Optional feedback">
+                        <button class="btn btn-primary small" type="submit">Submit</button>
+                    </form>
+                {% elif e.status == "Completed" and item.already_rated %}
+                    <span class="muted">Rated ✓</span>
+                {% else %}
+                    <span class="muted">--</span>
+                {% endif %}
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+    {% else %}
+        <p class="empty-state">You have no exchanges yet. Find a match and click "Request Exchange" to get started.</p>
+    {% endif %}
+</section>
+{% endblock %}

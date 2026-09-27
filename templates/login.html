@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Login - SkillSwap{% endblock %}
+{% block content %}
+<section class="form-page">
+    <div class="form-card">
+        <h2>Login</h2>
+        <form method="POST" action="{{ url_for('login') }}">
+            <label>Email</label>
+            <input type="email" name="email" required placeholder="you@example.com">
+
+            <label>Password</label>
+            <input type="password" name="password" required>
+
+            <button type="submit" class="btn btn-primary full-width">Login</button>
+        </form>
+        <p class="form-footer">New here? <a href="{{ url_for('register') }}">Create an account</a></p>
+    </div>
+</section>
+{% endblock %}
